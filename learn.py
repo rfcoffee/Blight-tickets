@@ -1,8 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
 
 # %load blight.py
 import pandas as pd
@@ -18,13 +14,12 @@ def normalize(data):
     return (data - data_mean)/data_diff
 
 def learn(trainX1, cvX1, trainy1, cvy1):
-    # use logistic regression to learn
-#     trainX1, cvX1, trainy1, cvy1 = train_test_split(trainX, trainy, random_state=0)
+    # use Gradient Boosting to learn
     trainX1 = normalize(trainX1)
     cvX1 = normalize(cvX1)
     gradboot = GradientBoostingClassifier().fit(trainX1, trainy1)
 
-    # calculate score
+    # calculate AUC-ROC score
     y_score = gradboot.decision_function(cvX1)
     fpr, tpr, _ = roc_curve(cvy1, y_score)
     roc_auc = auc(fpr, tpr)
@@ -32,7 +27,7 @@ def learn(trainX1, cvX1, trainy1, cvy1):
     
 def main():    
     try:
-        # read train and mca data
+        # read train and cv data
         ncol_mca = int((sys.argv[1]))
         train_num = np.load("train_num.npy")
         train_mca = np.load("train_mca_" + sys.argv[1] + ".npy")
